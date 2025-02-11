@@ -10,9 +10,7 @@
 
 const cardTmp = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
-// const cardPopup = document.querySelector('.popup_type_new-card');
 const addBtn = document.querySelector('.profile__add-button');
-
 
 function createCard({link, name}) {
     const cardElement = cardTmp.querySelector('.card').cloneNode(true);
@@ -29,18 +27,7 @@ const handleDelete = (card) => {
 
 initialCards.forEach(elem => {
     const card = createCard(elem);
-    // console.log(card);
     cardsContainer.append(card);
 });
 
-addBtn.addEventListener('click', () => {
-    // console.log('hiii');
-    // const card = createCard({link: 'dskjf', name: 'dsjgfh'}, handleDelete);
-    // // console.log(card);
-    // cardsContainer.append(card);
-    initialCards.forEach(elem => {
-        const card = createCard(elem);
-        // console.log(card);
-        cardsContainer.append(card);
-    });
-});
+
