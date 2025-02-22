@@ -1,8 +1,3 @@
-// import { cardTmp } from ".";
-// import { imgPopup } from ".";
-// import { closeModal } from "./modal";
-// import { openModal } from "./modal";
-
 const cardTmp = document.querySelector('#card-template').content;
 const imgPopup = document.querySelector('.popup_type_image');
 

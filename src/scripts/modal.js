@@ -1,6 +1,3 @@
-// export function openModal
-// export function closeModal
-
 export function openModal(popup, onClose) {
     popup.classList.add('popup_is-animated');
     popup.classList.add('popup_is-opened');

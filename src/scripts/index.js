@@ -6,15 +6,12 @@ import { handleDelete } from './card';
 import { likeCard } from './card';
 import { openModal } from './modal';
 import { closeModal } from './modal';
-// import { handleEscape } from './modal';
 
 const cardsContainer = document.querySelector('.places__list');
-// export const cardTmp = document.querySelector('#card-template').content;
 const addBtn = document.querySelector('.profile__add-button');
 const editBtn = document.querySelector('.profile__edit-button');
 const editPopup = document.querySelector('.popup_type_edit');
 const addPopup = document.querySelector('.popup_type_new-card');
-// export const imgPopup = document.querySelector('.popup_type_image');
 
 
 initialCards.forEach(elem => {
@@ -57,12 +54,3 @@ addBtn.addEventListener('click', () => {
     
     addPopup.addEventListener('submit', handleFormSubmit);
 });
-
-
-// 1 объявления и инициализация глобальных констант и переменных с 
-// DOM-элементами страницы,
-// 2 обработчики событий (при открытии и закрытии попапов; 
-// при отправке форм; обработчик, открывающий попап при клике по 
-// изображению карточки);
-// 3 вызовы других функций, подключённых из созданных модулей, 
-// которым нужно будет передавать объявленные здесь переменные и обработчики.
