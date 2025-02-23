@@ -36,18 +36,17 @@ function openImagePopup(cardElement) {
       cardElement.querySelector('.card__title').textContent;
     imgPopup.querySelector('.popup__image').alt = 
       cardElement.querySelector('.card__title').textContent;
-
-    const closeBtn = imgPopup.querySelector('.popup__close');
-    closeBtn.addEventListener('click', () => closeModal(imgPopup));
 }
+
+const closeImgBtn = imgPopup.querySelector('.popup__close');
+closeImgBtn.addEventListener('click', () => closeModal(imgPopup));
+const closeEditBtn = popupEditProfile.querySelector('.popup__close');
+closeEditBtn.addEventListener('click', () => closeModal(popupEditProfile));
 
 buttonOpenEditProfilePopup.addEventListener('click', () => {
     openModal(popupEditProfile);
     nameInput.value = name.textContent;
     jobInput.value = job.textContent;
-
-    const closeBtn = popupEditProfile.querySelector('.popup__close');
-    closeBtn.addEventListener('click', () => closeModal(popupEditProfile));
 });
 
 function submitEditProfileForm(evt) {
@@ -61,17 +60,7 @@ editProfileForm.addEventListener('submit', submitEditProfileForm);
 
 buttonOpenAddCardPopup.addEventListener('click', () => {
     openModal(popupAddCard);
-    if (placeInput.value.length === 0 || linkInput.value.length === 0) 
-        addButton.setAttribute('disabled', true);
-    const closeBtn = popupAddCard.querySelector('.popup__close');
-    closeBtn.addEventListener('click', () => closeModal(popupAddCard));
-});
-
-addCardForm.addEventListener('input', () => {
-    if (placeInput.value.length > 0 && linkInput.value.length > 0) 
-        addButton.removeAttribute('disabled');
-    else
-    addButton.setAttribute('disabled', true);
+    
 });
 
 function submitAddCardForm(evt) {
@@ -80,8 +69,11 @@ function submitAddCardForm(evt) {
     const card = createCard(cardElement, handleDelete, likeCard, openImagePopup);
     cardsContainer.prepend(card);
     addCardForm.reset();
-    addButton.setAttribute('disabled', true);
+    
     closeModal(popupAddCard);
 }
 
 addCardForm.addEventListener('submit', submitAddCardForm);
+
+const closeAddBtn = popupAddCard.querySelector('.popup__close');
+closeAddBtn.addEventListener('click', () => closeModal(popupAddCard));
