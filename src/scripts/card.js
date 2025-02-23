@@ -1,27 +1,26 @@
 const cardTmp = document.querySelector('#card-template').content;
-const imgPopup = document.querySelector('.popup_type_image');
 
 export const handleDelete = (card) => {
     card.remove();
 }
 
-export function createCard({link, name}, onDelete, onLike, onImg, onClose) {
-    const cardElement = cardTmp.querySelector('.card').cloneNode(true);
+function getCardTemplate() {
+  const cardElement = cardTmp.querySelector('.card').cloneNode(true);
+  return cardElement;
+}
+
+export function createCard({link, name}, onDelete, onLike, onImg) {
+    const cardElement = getCardTemplate();
     const deleteBtn = cardElement.querySelector('.card__delete-button');
     const likeBtn = cardElement.querySelector('.card__like-button');
     const cardImg = cardElement.querySelector('.card__image');
-    cardElement.querySelector('.card__image').src = link;
-    cardElement.querySelector('.card__image').alt = name;
+    cardImg.src = link;
+    cardImg.alt = name;
     cardElement.querySelector('.card__title').textContent = name;
     deleteBtn.addEventListener('click', () => onDelete(cardElement));
     likeBtn.addEventListener('click', (evt) => onLike(evt));
-    cardImg.addEventListener('click', () => {
-      onImg(imgPopup, onClose);
-      imgPopup.querySelector('.popup__image').src = 
-        cardElement.querySelector('.card__image').src;
-      imgPopup.querySelector('.popup__caption').textContent = 
-        cardElement.querySelector('.card__title').textContent;
-    });
+    cardImg.addEventListener('click', () => onImg(cardElement));
+
     return cardElement;
 }
 
