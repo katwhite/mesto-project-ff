@@ -22,6 +22,8 @@ const addCardForm = popupAddCard.querySelector('.popup__form');
 const addButton = popupAddCard.querySelector('.popup__button');
 const placeInput = popupAddCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupAddCard.querySelector('.popup__input_type_url');
+const imgPopupImage = imgPopup.querySelector('.popup__image');
+const imgPopupCaption = imgPopup.querySelector('.popup__caption');
 
 initialCards.forEach(elem => {
     const card = createCard(elem, handleDelete, likeCard, openImagePopup);
@@ -30,12 +32,9 @@ initialCards.forEach(elem => {
 
 function openImagePopup(cardElement) {
     openModal(imgPopup);
-    imgPopup.querySelector('.popup__image').src = 
-      cardElement.querySelector('.card__image').src;
-    imgPopup.querySelector('.popup__caption').textContent = 
-      cardElement.querySelector('.card__title').textContent;
-    imgPopup.querySelector('.popup__image').alt = 
-      cardElement.querySelector('.card__title').textContent;
+    imgPopupImage.src = cardElement.querySelector('.card__image').src;
+    imgPopupCaption.textContent = cardElement.querySelector('.card__title').textContent;
+    imgPopupImage.alt = cardElement.querySelector('.card__title').textContent;
 }
 
 const closeImgBtn = imgPopup.querySelector('.popup__close');
@@ -60,7 +59,15 @@ editProfileForm.addEventListener('submit', submitEditProfileForm);
 
 buttonOpenAddCardPopup.addEventListener('click', () => {
     openModal(popupAddCard);
-    
+    if (placeInput.value.length === 0 || linkInput.value.length === 0) 
+        addButton.setAttribute('disabled', true);
+});
+
+addCardForm.addEventListener('input', () => {
+    if (placeInput.value.length > 0 && linkInput.value.length > 0) 
+        addButton.removeAttribute('disabled');
+    else
+    addButton.setAttribute('disabled', true);
 });
 
 function submitAddCardForm(evt) {
@@ -69,7 +76,7 @@ function submitAddCardForm(evt) {
     const card = createCard(cardElement, handleDelete, likeCard, openImagePopup);
     cardsContainer.prepend(card);
     addCardForm.reset();
-    
+    addButton.setAttribute('disabled', true);
     closeModal(popupAddCard);
 }
 
