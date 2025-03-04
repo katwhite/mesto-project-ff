@@ -6,6 +6,9 @@ import { handleDelete } from './card';
 import { likeCard } from './card';
 import { openModal } from './modal';
 import { closeModal } from './modal';
+import { enableValidation } from './validation';
+import { formValidationConfig } from './validation';
+import { clearValidation } from './validation';
 
 const cardsContainer = document.querySelector('.places__list');
 const buttonOpenAddCardPopup = document.querySelector('.profile__add-button');
@@ -44,6 +47,7 @@ closeEditBtn.addEventListener('click', () => closeModal(popupEditProfile));
 
 buttonOpenEditProfilePopup.addEventListener('click', () => {
     openModal(popupEditProfile);
+    clearValidation(popupEditProfile.querySelector(`${formValidationConfig.formSelector}`), formValidationConfig); 
     nameInput.value = name.textContent;
     jobInput.value = job.textContent;
 });
@@ -59,15 +63,7 @@ editProfileForm.addEventListener('submit', submitEditProfileForm);
 
 buttonOpenAddCardPopup.addEventListener('click', () => {
     openModal(popupAddCard);
-    if (placeInput.value.length === 0 || linkInput.value.length === 0) 
-        addButton.setAttribute('disabled', true);
-});
-
-addCardForm.addEventListener('input', () => {
-    if (placeInput.value.length > 0 && linkInput.value.length > 0) 
-        addButton.removeAttribute('disabled');
-    else
-    addButton.setAttribute('disabled', true);
+    clearValidation(popupAddCard.querySelector(`${formValidationConfig.formSelector}`), formValidationConfig);
 });
 
 function submitAddCardForm(evt) {
@@ -76,7 +72,6 @@ function submitAddCardForm(evt) {
     const card = createCard(cardElement, handleDelete, likeCard, openImagePopup);
     cardsContainer.prepend(card);
     addCardForm.reset();
-    addButton.setAttribute('disabled', true);
     closeModal(popupAddCard);
 }
 
@@ -84,3 +79,7 @@ addCardForm.addEventListener('submit', submitAddCardForm);
 
 const closeAddBtn = popupAddCard.querySelector('.popup__close');
 closeAddBtn.addEventListener('click', () => closeModal(popupAddCard));
+
+enableValidation(formValidationConfig); 
+
+// clearValidation(profileForm, formValidationConfig); 
