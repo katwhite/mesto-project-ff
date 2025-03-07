@@ -6,7 +6,13 @@ const cardTmp = document.querySelector('#card-template').content;
 const popupDeleteCard = document.querySelector('.popup_type_delete');
 
 export const handleDelete = (card, cardId) => {
-  deleteCardApi(cardId).then(() => card.remove());
+  deleteCardApi(cardId).then(() => {
+    card.remove();
+    closeModal(popupDeleteCard);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 }
 
 function getCardTemplate() {
@@ -32,7 +38,6 @@ export function createCard(userId, {link, name, likes, _id, owner}, onDelete, on
         function submitDeleteCard(evt) {
           evt.preventDefault(); 
           onDelete(cardElement, _id);
-          closeModal(popupDeleteCard);
         }
         popupDeleteCard.addEventListener('submit', submitDeleteCard);
       });
