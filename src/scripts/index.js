@@ -1,6 +1,5 @@
 import '../pages/index.css';
 import { createCard } from './card';
-import { handleDelete } from './card';
 import { likeCard } from './card';
 import { openModal } from './modal';
 import { closeModal } from './modal';
@@ -11,6 +10,7 @@ import { getInitialCards } from './api';
 import { getUserInfo } from './api';
 import { addNewCard } from './api';
 import { editUserinfo, editUserPic } from './api';
+import { deleteCardApi } from './api';
 
 const cardsContainer = document.querySelector('.places__list');
 const buttonOpenAddCardPopup = document.querySelector('.profile__add-button');
@@ -29,11 +29,13 @@ const editProfileForm = popupEditProfile.querySelector('.popup__form');
 const editProfilePicForm = popupEditProfilePic.querySelector('.popup__form');
 const pfpInput = popupEditProfilePic.querySelector('.popup__input_type_pfp-link');
 const addCardForm = popupAddCard.querySelector('.popup__form');
-// const addButton = popupAddCard.querySelector('.popup__button');
 const placeInput = popupAddCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupAddCard.querySelector('.popup__input_type_url');
 const imgPopupImage = imgPopup.querySelector('.popup__image');
 const imgPopupCaption = imgPopup.querySelector('.popup__caption');
+const popupDeleteCard = document.querySelector('.popup_type_delete');
+
+let userId;
 
 Promise.all([getUserInfo, getInitialCards])
 .then(([userData, cardsData]) => {
@@ -41,9 +43,10 @@ Promise.all([getUserInfo, getInitialCards])
     job.textContent = userData.about;
     profilePic.style = `background-image: url('${userData.avatar}')`;
     cardsData.forEach(elem => {
-        const card = createCard(userData._id, elem, handleDelete, likeCard, openImagePopup);
+        const card = createCard(userData._id, elem, handleDeleteCard, likeCard, openImagePopup);
         cardsContainer.append(card);
     });
+    userId = userData._id;
 })
 .catch((err) => {
     console.log(err);
@@ -75,13 +78,12 @@ function submitEditProfileForm(evt) {
     editUserinfo(newData).then((res) => {
         name.textContent = res.name;
         job.textContent = res.about;
+        closeModal(popupEditProfile);
     })
     .catch((err) => {
         console.log(err);
     })
     .finally(() => renderLoading(false, editProfileForm));
-    
-    closeModal(popupEditProfile);
 }
 
 editProfileForm.addEventListener('submit', submitEditProfileForm);
@@ -100,13 +102,13 @@ function submitEditProfilePicForm(evt) {
     const newData = {avatar: pfpInput.value};
     editUserPic(newData).then((res) => {
         profilePic.style= `background-image: url('${res.avatar}'`;
+        closeModal(popupEditProfilePic);
     })
     .catch((err) => {
         console.log(err);
     })
     .finally(() => renderLoading(false, editProfilePicForm));
     editProfilePicForm.reset();
-    closeModal(popupEditProfilePic);
 }
 
 editProfilePicForm.addEventListener('submit', submitEditProfilePicForm);
@@ -119,25 +121,51 @@ buttonOpenAddCardPopup.addEventListener('click', () => {
 function submitAddCardForm(evt) {
     evt.preventDefault(); 
     renderLoading(true, addCardForm);
-    const UserId = getUserInfo.then((res) => {return res._id});
-    // console.log(UserId); -- Promise pending, не печатает??? но всё работает
     const cardElement = {name: placeInput.value, link: linkInput.value, likes: []};
     addNewCard(cardElement)
-    .then((card) => cardsContainer.prepend(
-        createCard(UserId, card, handleDelete, likeCard, openImagePopup)
-        ))
+    .then((card) => {
+        cardsContainer.prepend(
+            createCard(userId, card, handleDeleteCard, likeCard, openImagePopup)
+        );
+        closeModal(popupAddCard);
+    })
     .catch((err) => {
         console.log(err);
     })
     .finally(() => renderLoading(false, addCardForm));
     addCardForm.reset();
-    closeModal(popupAddCard);
 }
 
 addCardForm.addEventListener('submit', submitAddCardForm);
 
 const closeAddBtn = popupAddCard.querySelector('.popup__close');
 closeAddBtn.addEventListener('click', () => closeModal(popupAddCard));
+
+let cardForDelete = {}
+
+const handleDeleteCard = (cardElement, cardId) => {
+    cardForDelete = {
+        id: cardId,
+        cardElement
+    }
+    openModal(popupDeleteCard);
+    const closeDeleteBtn = popupDeleteCard.querySelector('.popup__close');
+    closeDeleteBtn.addEventListener('click', () => closeModal(popupDeleteCard));
+    popupDeleteCard.addEventListener('submit', submitDeleteCard);
+};
+
+const submitDeleteCard = (evt) => {
+  evt.preventDefault();
+ if (!cardForDelete.cardElement) return;
+
+  deleteCardApi(cardForDelete.id)
+    .then(() => {
+      cardForDelete.cardElement.remove();
+      closeModal(popupDeleteCard);
+      cardForDelete = {};
+    })
+    .catch((err) => {console.log(err);})
+};
 
 enableValidation(formValidationConfig); 
 

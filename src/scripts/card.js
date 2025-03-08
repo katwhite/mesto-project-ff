@@ -1,19 +1,6 @@
-import { deleteCardApi } from "./api";
 import { likeCardApi, unlikeCardApi } from "./api";
-import { openModal, closeModal } from "./modal";
 
 const cardTmp = document.querySelector('#card-template').content;
-const popupDeleteCard = document.querySelector('.popup_type_delete');
-
-export const handleDelete = (card, cardId) => {
-  deleteCardApi(cardId).then(() => {
-    card.remove();
-    closeModal(popupDeleteCard);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
 
 function getCardTemplate() {
   const cardElement = cardTmp.querySelector('.card').cloneNode(true);
@@ -32,14 +19,7 @@ export function createCard(userId, {link, name, likes, _id, owner}, onDelete, on
     cardElement.querySelector('.card__title').textContent = name;
     if (userId === owner._id) {
       deleteBtn.addEventListener('click', () => {
-        openModal(popupDeleteCard);
-        const closeDeleteBtn = popupDeleteCard.querySelector('.popup__close');
-        closeDeleteBtn.addEventListener('click', () => closeModal(popupDeleteCard));
-        function submitDeleteCard(evt) {
-          evt.preventDefault(); 
-          onDelete(cardElement, _id);
-        }
-        popupDeleteCard.addEventListener('submit', submitDeleteCard);
+        onDelete(cardElement, _id);
       });
     }
     else deleteBtn.setAttribute('disabled', true);

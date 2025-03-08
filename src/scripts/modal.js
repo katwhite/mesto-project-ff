@@ -1,5 +1,4 @@
 export function openModal(popup) {
-    popup.classList.add('popup_is-animated');
     popup.classList.add('popup_is-opened');
     
     popup.addEventListener('click', closeByOvelrayClick);
@@ -8,7 +7,6 @@ export function openModal(popup) {
 
 export function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
-    popup.classList.remove('popup_is-animated');
     popup.removeEventListener('click', closeByOvelrayClick);
     document.removeEventListener('keydown', handleEscape);
 }
