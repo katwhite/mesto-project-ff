@@ -17,7 +17,7 @@ const buttonOpenAddCardPopup = document.querySelector('.profile__add-button');
 const buttonOpenEditProfilePopup = document.querySelector('.profile__edit-button');
 const buttonOpenEditProfilePicPopup = document.querySelector('.profile__image__edit-button');
 const popupEditProfile = document.querySelector('.popup_type_edit');
-const popupEditProfilePic = document.querySelector('.popup_type_edit-pfp');
+const popupEditProfilePic = document.querySelector('.popup_type_edit-profile-pic');
 const popupAddCard = document.querySelector('.popup_type_new-card');
 const imgPopup = document.querySelector('.popup_type_image');
 const nameInput = popupEditProfile.querySelector('.popup__input_type_name');
@@ -27,7 +27,7 @@ const job = document.querySelector('.profile__description');
 const profilePic = document.querySelector('.profile__image');
 const editProfileForm = popupEditProfile.querySelector('.popup__form');
 const editProfilePicForm = popupEditProfilePic.querySelector('.popup__form');
-const pfpInput = popupEditProfilePic.querySelector('.popup__input_type_pfp-link');
+const profilePicInput = popupEditProfilePic.querySelector('.popup__input_type_profile-pic-link');
 const addCardForm = popupAddCard.querySelector('.popup__form');
 const placeInput = popupAddCard.querySelector('.popup__input_type_card-name');
 const linkInput = popupAddCard.querySelector('.popup__input_type_url');
@@ -43,7 +43,7 @@ Promise.all([getUserInfo, getInitialCards])
     job.textContent = userData.about;
     profilePic.style = `background-image: url('${userData.avatar}')`;
     cardsData.forEach(elem => {
-        const card = createCard(userData._id, elem, handleDeleteCard, likeCard, openImagePopup);
+        const card = createCard(userData._id, elem, openPopupDeleteCard, likeCard, openImagePopup);
         cardsContainer.append(card);
     });
     userId = userData._id;
@@ -99,16 +99,16 @@ closeEditProfilePicBtn.addEventListener('click', () => closeModal(popupEditProfi
 function submitEditProfilePicForm(evt) {
     evt.preventDefault(); 
     renderLoading(true, editProfilePicForm);
-    const newData = {avatar: pfpInput.value};
+    const newData = {avatar: profilePicInput.value};
     editUserPic(newData).then((res) => {
         profilePic.style= `background-image: url('${res.avatar}'`;
         closeModal(popupEditProfilePic);
+        editProfilePicForm.reset();
     })
     .catch((err) => {
         console.log(err);
     })
     .finally(() => renderLoading(false, editProfilePicForm));
-    editProfilePicForm.reset();
 }
 
 editProfilePicForm.addEventListener('submit', submitEditProfilePicForm);
@@ -125,15 +125,15 @@ function submitAddCardForm(evt) {
     addNewCard(cardElement)
     .then((card) => {
         cardsContainer.prepend(
-            createCard(userId, card, handleDeleteCard, likeCard, openImagePopup)
+            createCard(userId, card, openPopupDeleteCard, likeCard, openImagePopup)
         );
         closeModal(popupAddCard);
+        addCardForm.reset();
     })
     .catch((err) => {
         console.log(err);
     })
     .finally(() => renderLoading(false, addCardForm));
-    addCardForm.reset();
 }
 
 addCardForm.addEventListener('submit', submitAddCardForm);
@@ -141,16 +141,17 @@ addCardForm.addEventListener('submit', submitAddCardForm);
 const closeAddBtn = popupAddCard.querySelector('.popup__close');
 closeAddBtn.addEventListener('click', () => closeModal(popupAddCard));
 
+const closeDeleteBtn = popupDeleteCard.querySelector('.popup__close');
+closeDeleteBtn.addEventListener('click', () => closeModal(popupDeleteCard));
+
 let cardForDelete = {}
 
-const handleDeleteCard = (cardElement, cardId) => {
+const openPopupDeleteCard = (cardElement, cardId) => {
     cardForDelete = {
         id: cardId,
         cardElement
     }
     openModal(popupDeleteCard);
-    const closeDeleteBtn = popupDeleteCard.querySelector('.popup__close');
-    closeDeleteBtn.addEventListener('click', () => closeModal(popupDeleteCard));
     popupDeleteCard.addEventListener('submit', submitDeleteCard);
 };
 
