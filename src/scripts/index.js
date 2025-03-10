@@ -152,8 +152,9 @@ const openPopupDeleteCard = (cardElement, cardId) => {
         cardElement
     }
     openModal(popupDeleteCard);
-    popupDeleteCard.addEventListener('submit', submitDeleteCard);
 };
+
+popupDeleteCard.addEventListener('submit', submitDeleteCard);
 
 const submitDeleteCard = (evt) => {
   evt.preventDefault();
